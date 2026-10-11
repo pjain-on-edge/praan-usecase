@@ -1,0 +1,62 @@
+menu "Praan AQ Node"
+
+    config APP_MQTT_BROKER_URI
+        string "MQTT broker URI"
+        default "mqtts://broker.example.com:8883"
+        help
+            mqtts:// validates the server against the ESP x509 certificate bundle.
+            mqtt:// is accepted for local testing only.
+
+    config APP_MQTT_USERNAME
+        string "MQTT username"
+        default ""
+
+    config APP_MQTT_PASSWORD
+        string "MQTT password"
+        default ""
+
+    config APP_TOPIC_PREFIX
+        string "MQTT topic prefix"
+        default "praan/v1"
+
+    config APP_PROV_POP
+        string "BLE provisioning proof of possession"
+        default "praan-pop"
+        help
+            Must be unique per device in production.
+
+    config APP_I2C_FREQ_HZ
+        int "I2C bus frequency (Hz)"
+        range 10000 400000
+        default 100000
+
+    config APP_PUBLISH_INTERVAL_MS
+        int "Live telemetry publish interval (ms)"
+        range 1000 60000
+        default 2000
+
+    config APP_BACKLOG_BATCH
+        int "Records per backlog batch"
+        range 1 30
+        default 30
+
+    config APP_INFLIGHT_MAX
+        int "Maximum unacknowledged publishes"
+        range 1 4
+        default 4
+
+    config APP_LED_MAX_DUTY_PCT
+        int "Status LED maximum duty (%)"
+        range 1 100
+        default 25
+
+    config APP_LIGHT_SLEEP
+        bool "Enable automatic light sleep"
+        depends on PM_ENABLE
+        select FREERTOS_USE_TICKLESS_IDLE
+        default n
+        help
+            Off by default: the PMS5003 fan draws about 100 mA continuously, so light
+            sleep saves little and adds UART/SDMMC timing risk.
+
+endmenu

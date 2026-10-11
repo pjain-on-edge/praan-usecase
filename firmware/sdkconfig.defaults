@@ -1,0 +1,53 @@
+# Target and flash layout
+CONFIG_IDF_TARGET="esp32s3"
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# Console on the native USB-Serial-JTAG port
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+
+# Size over speed: the workload is I/O bound
+CONFIG_COMPILER_OPTIMIZATION_SIZE=y
+
+# 10 ms tick is plenty for a 1 Hz pipeline and halves tick wakeups
+CONFIG_FREERTOS_HZ=100
+
+# DFS 40..160 MHz; light sleep is a runtime option (APP_LIGHT_SLEEP)
+CONFIG_PM_ENABLE=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_160=y
+
+# BLE provisioning only: NimBLE, peripheral role, one connection
+CONFIG_BT_ENABLED=y
+CONFIG_BT_NIMBLE_ENABLED=y
+CONFIG_BT_NIMBLE_ROLE_CENTRAL=n
+CONFIG_BT_NIMBLE_ROLE_OBSERVER=n
+CONFIG_BT_NIMBLE_MAX_CONNECTIONS=1
+
+# OTA rollback: a new image must prove itself before it is marked valid
+CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE=y
+
+# Watchdog: 5 s, and a trigger panics so a hung new image is rolled back
+CONFIG_ESP_TASK_WDT_TIMEOUT_S=5
+CONFIG_ESP_TASK_WDT_PANIC=y
+
+# TLS: allocate record buffers on demand; common CA subset keeps the bundle small
+CONFIG_MBEDTLS_DYNAMIC_BUFFER=y
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_CMN=y
+
+# Post-mortem: core dump to the coredump partition
+CONFIG_ESP_COREDUMP_ENABLE_TO_FLASH=y
+CONFIG_ESP_COREDUMP_DATA_FORMAT_ELF=y
+
+# SD: 8.3 names only
+CONFIG_FATFS_LFN_NONE=y
+
+# SNTP resync interval 1 h
+CONFIG_LWIP_SNTP_UPDATE_DELAY=3600000
+
+# Log lines carry wall-clock time (set from the RTC at boot)
+CONFIG_LOG_TIMESTAMP_SOURCE_SYSTEM=y
+
+# Main task only runs the boot sequence; its stack returns to the heap afterwards
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=4096
